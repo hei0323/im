@@ -29,37 +29,57 @@ use \GatewayWorker\Lib\Gateway;
 class Events
 {
     /**
-     * 当客户端连接时触发
-     * 如果业务不需此回调可以删除onConnect
-     * 
-     * @param int $client_id 连接id
+     * businessWorker进程启动时触发
+     */
+    public static function onWorkerStart($businessWorker)
+    {
+        echo "Workman服务启动成功\n";
+    }
+
+    /**
+     * 当客户端连接上gateway进程时(TCP三次握手完毕时)触发的回调函数
      */
     public static function onConnect($client_id)
     {
-        // 向当前client_id发送数据 
-        Gateway::sendToClient($client_id, "Hello $client_id\r\n");
-        // 向所有人发送
-        Gateway::sendToAll("$client_id login\r\n");
+//        echo '用户'.$client_id."完成onConnect连接\n";
+//        Gateway::sendToClient($client_id, json_encode(array(
+//            'type'      => 'init',
+//            'client_id' => $client_id
+//        )));
     }
-    
-   /**
-    * 当客户端发来消息时触发
-    * @param int $client_id 连接id
-    * @param mixed $message 具体消息
-    */
-   public static function onMessage($client_id, $message)
-   {
-        // 向所有人发送 
-        Gateway::sendToAll("$client_id said $message\r\n");
-   }
-   
-   /**
-    * 当用户断开连接时触发
-    * @param int $client_id 连接id
-    */
-   public static function onClose($client_id)
-   {
-       // 向所有人发送 
-       GateWay::sendToAll("$client_id logout\r\n");
-   }
+
+    /**
+     * 当客户端连接上gateway完成websocket握手时触发的回调函数
+     */
+    public static function onWebSocketConnect($client_id, $data)
+    {
+        //直接返回$client_id 由让web项目处理
+        echo '用户'.$client_id."完成onWebSocketConnect连接\n";
+        Gateway::sendToClient($client_id, json_encode(array(
+            'type'      => 'init',
+            'client_id' => $client_id
+        )),256);
+    }
+
+    /**
+     * 有消息时触发该方法
+     */
+    public static function onMessage($client_id, $message)
+    {
+        //不做任何业务处理
+        echo '用户'.$client_id.":$message\n";
+        Gateway::sendToClient($client_id, json_encode(array(
+            'msg'      => 'init',
+            'content' => $client_id,
+            'client_id' => $message
+        )));
+    }
+
+    /**
+     * 当用户断开连接时触发的方法
+     */
+    public static function onClose($client_id)
+    {
+        echo '用户'.$client_id."断开连接\n";
+    }
 }

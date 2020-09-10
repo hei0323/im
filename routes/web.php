@@ -14,3 +14,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+//调试控制器路由
+Route::namespace('Test')->middleware('web')->group(function (){
+    Route::get('/config','ConfigTestController@index');
+    Route::get('/redis','RedisTestController@index');
+});

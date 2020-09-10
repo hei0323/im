@@ -15,14 +15,14 @@ use \Workerman\Worker;
 use \GatewayWorker\Gateway;
 
 // 自动加载类
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 // gateway 进程，这里使用Text协议，可以用telnet测试
-$gateway = new Gateway("tcp://0.0.0.0:8282");
+$gateway = new Gateway("websocket://0.0.0.0:8282");
 // gateway名称，status方便查看
 $gateway->name = 'IMServerGateway';
 // gateway进程数
-$gateway->count = 4;
+$gateway->count = 1;
 // 本机ip，分布式部署时使用内网ip
 $gateway->lanIp = '127.0.0.1';
 // 内部通讯起始端口，假如$gateway->count=4，起始端口为4000
