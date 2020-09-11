@@ -19,4 +19,12 @@ Route::get('/', function () {
 Route::namespace('Test')->middleware('web')->group(function (){
     Route::get('/config','ConfigTestController@index');
     Route::get('/redis','RedisTestController@index');
+    Route::get('/model','ModelTestController@index');
+});
+
+//即时通讯路由
+Route::namespace('Chat')->middleware('web')->group(function (){
+    Route::get('/friend','FriendController@index');
+    Route::get('/group','GroupController@index');
+    Route::get('/msg','MsgController@index');
 });
