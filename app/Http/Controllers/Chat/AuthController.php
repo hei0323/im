@@ -24,5 +24,7 @@ class AuthController extends Controller
             }
         }
         Gateway::bindUid($client_id,$memberId);
+
+        return response()->json(['code'=>0,'msg'=>'用户绑定完成！']);
     }
 }

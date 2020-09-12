@@ -13,6 +13,12 @@
 Route::namespace('Chat')->group(function (){
     Route::get('/friend','FriendController@index');
     Route::get('/group','GroupController@index');
-    Route::get('/msg','MsgController@index');
+
+    Route::post('/msg/send','MsgController@send');
+
     Route::get('/auth/bind/{client_id}','AuthController@bind');
+
+    Route::get('/member','MemberController@index');
+    Route::get('/member/online','MemberController@online');
+    Route::get('/member/{memberId}','MemberController@show');
 });
