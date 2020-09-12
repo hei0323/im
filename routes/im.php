@@ -14,4 +14,5 @@ Route::namespace('Chat')->group(function (){
     Route::get('/friend','FriendController@index');
     Route::get('/group','GroupController@index');
     Route::get('/msg','MsgController@index');
+    Route::get('/auth/bind/{client_id}','AuthController@bind');
 });

@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\Session;
 class MsgController extends Controller
 {
     public function index(){
-        Session::put('a','bbb');
-        Session::save();
-        print_r(Session::all());
+
     }
 }
