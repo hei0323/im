@@ -46,7 +46,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
-        //
+        $this->mapImRoutes();
     }
 
     /**
@@ -76,5 +76,18 @@ class RouteServiceProvider extends ServiceProvider
              ->middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
+    }
+
+    /**
+     * 自定义应用程序的im组路由
+     * 有状态的即时通讯路由
+     *
+     * @return void
+     */
+    protected function mapImRoutes()
+    {
+        Route::middleware('im')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/im.php'));
     }
 }
