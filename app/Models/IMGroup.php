@@ -18,7 +18,7 @@ class IMGroup extends Model
      * 约束表主键
      * @var string
      */
-    protected $primaryKey = 'im_group_id';
+    protected $primaryKey = 'group_id';
 
     /**
      * 模型日期列的存储格式

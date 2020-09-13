@@ -15,6 +15,8 @@ Route::namespace('Chat')->group(function (){
     Route::get('/group','GroupController@index');
 
     Route::post('/msg/send','MsgController@send');
+    Route::get('/msg/list/save','MsgController@msgListSave');
+    Route::get('/msg/list/show','MsgController@msgListShow');
 
     Route::get('/auth/bind/{client_id}','AuthController@bind');
 

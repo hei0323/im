@@ -5,20 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class IMMsg extends Model
+class IMMsgList extends Model
 {
     use SoftDeletes;
     /**
      * 关联模型的数据表名
      * @var string
      */
-    protected $table = 'im_msg';
+    protected $table = 'im_msg_list';
 
     /**
      * 约束表主键
-     * @var int
+     * @var string
      */
-    protected $primaryKey = 'msg_id';
+    protected $primaryKey = 'id';
 
     /**
      * 禁止自动管理 created_at 和 updated_at 列
@@ -32,22 +32,33 @@ class IMMsg extends Model
      */
     protected $dateFormat = 'U';
 
+    /**
+     * 不可批量赋值的属性
+     * @var array
+     */
+    protected $guarded = [];
+
 
     /**
      * 获取消息关联用户数据
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-/*    public function sender()
+    /**
+     * 获取消息关联用户数据
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function member()
     {
-        return $this->belongsTo('App\Models\Member','member_id','sender_id');
-    }*/
+        return $this->hasOne('App\Models\Member','member_id','sender_id');
+    }
 
     /**
      * 获取消息关联用户数据
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
- /*   public function receiver()
-    {
-        return $this->belongsTo('App\Models\Member','member_id','receiver_id');
-    }*/
+     public function group()
+     {
+         return $this->hasOne('App\Models\IMGroup','group_id','sender_id');
+     }
+
 }

@@ -24,5 +24,11 @@ class IMGroupMember extends Model
      * 禁止自动管理 created_at 和 updated_at 列
      * @var bool
      */
-    public $timestamps = false;
+    public $timestamps = true;
+
+    /**
+     * 模型日期列的存储格式
+     * @var string
+     */
+    protected $dateFormat = 'U';
 }

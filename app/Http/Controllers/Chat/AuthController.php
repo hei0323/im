@@ -13,8 +13,12 @@ class AuthController extends Controller
      * 用户客户端绑定
      * @param $client_id
      */
-    public function bind($client_id)
+    public function bind(Request$request,$client_id)
     {
+        $result = $request->header();
+        dd($result);
+
+        die;
         //唯一设备绑定用户唯一id
         $memberId = Session::get('member_id');
         $clientIds = Gateway::getClientIdByUid($memberId);

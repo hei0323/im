@@ -14,7 +14,7 @@ class Member extends Model
 
     /**
      * 约束表主键
-     * @var string
+     * @var int
      */
     protected $primaryKey = 'member_id';
 
@@ -32,5 +32,21 @@ class Member extends Model
     public function store()
     {
         return $this->belongsTo('App\Models\Store','store_id','store_id');
+    }
+
+    /**
+     * 获取用户发送的消息
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function imMsg(){
+        return $this->hasMany('App\Models\IMMsg','sender_id','member_id');
+    }
+
+    /**
+     * 获取用户发送的消息
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function imMsgList(){
+        return $this->hasMany('App\Models\IMMsgList','sender_id','member_id');
     }
 }
