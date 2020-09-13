@@ -11,16 +11,20 @@
 
 //即时通讯路由
 Route::namespace('Chat')->group(function (){
-    Route::get('/friend','FriendController@index');
-    Route::get('/group','GroupController@index');
+    Route::middleware('agent')->group(function (){
+        Route::get('/friend','FriendController@index');
+        Route::get('/group','GroupController@index');
 
-    Route::post('/msg/send','MsgController@send');
-    Route::get('/msg/list/save','MsgController@msgListSave');
-    Route::get('/msg/list/show','MsgController@msgListShow');
+        Route::post('/msg/send','MsgController@send');
+        Route::get('/msg/list/save','MsgController@msgListSave');
+        Route::get('/msg/list/show','MsgController@msgListShow');
 
-    Route::get('/auth/bind/{client_id}','AuthController@bind');
+        Route::get('/member','MemberController@index');
+        Route::get('/member/online','MemberController@online');
+        Route::get('/member/{memberId}','MemberController@show');
+    });
+    Route::middleware('agent:1')->group(function (){
+        Route::get('/auth/bind/{client_id}','AuthController@bind');
+    });
 
-    Route::get('/member','MemberController@index');
-    Route::get('/member/online','MemberController@online');
-    Route::get('/member/{memberId}','MemberController@show');
 });

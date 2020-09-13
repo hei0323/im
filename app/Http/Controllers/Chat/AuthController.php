@@ -3,32 +3,22 @@
 namespace App\Http\Controllers\Chat;
 
 use App\Http\Controllers\Controller;
-use GatewayWorker\Lib\Gateway;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
+use App\Services\ChatAuthService;
 
 class AuthController extends Controller
 {
+
     /**
      * 用户客户端绑定
-     * @param $client_id
+     * @param ChatAuthService $chatAuthService
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function bind(Request$request,$client_id)
+    public function bind(ChatAuthService $chatAuthService)
     {
-        $result = $request->header();
-        dd($result);
-
-        die;
-        //唯一设备绑定用户唯一id
-        $memberId = Session::get('member_id');
-        $clientIds = Gateway::getClientIdByUid($memberId);
-        if(!empty($clientIds)){
-            foreach ($clientIds as $value){
-                Gateway::closeClient($value);
-            }
+        if($code = $chatAuthService->bind()){
+            return response()->json(['code'=>0,'msg'=>'用户绑定完成！']);
+        }else{
+            return response()->json(['code'=>$code,'msg'=>'用户绑定完成！']);
         }
-        Gateway::bindUid($client_id,$memberId);
-
-        return response()->json(['code'=>0,'msg'=>'用户绑定完成！']);
     }
 }
