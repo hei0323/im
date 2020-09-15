@@ -34,7 +34,6 @@ class CheckAgent
             'http://www.newweb.com', 'http://www.chejj.cn', 'http://www.mycjj.com', 'https://www.chejj.cn', 'https://www.mycjj.com',
             'http://4s.newweb.com', 'http://4s.chejj.cn', 'http://4s.mycjj.com', 'https://4s.chejj.cn', 'https://4s.mycjj.com',
             'http://api.newweb.com', 'http://api.chejj.cn', 'http://api.mycjj.com', 'https://api.chejj.cn', 'https://api.mycjj.com');
-        $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
         if (in_array($origin, $allowOrigin)) {
             $response->header('Access-Control-Allow-Origin:' . $origin);
         }
