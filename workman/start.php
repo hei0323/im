@@ -34,7 +34,7 @@ foreach(glob(__DIR__.'/IMServer/start*.php') as $start_file)
     require_once $start_file;
 }
 //运行前的参数配置
-Worker::$pidFile = '/var/run/workerman.pid';
+Worker::$pidFile = __DIR__.'/../storage/workerman.pid';
 Worker::$logFile = __DIR__.'/../storage/logs/workerman.log';
 // 运行所有服务
 Worker::runAll();
