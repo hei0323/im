@@ -35,12 +35,12 @@ class CheckAgent
             'http://4s.newweb.com', 'http://4s.chejj.cn', 'http://4s.mycjj.com', 'https://4s.chejj.cn', 'https://4s.mycjj.com',
             'http://api.newweb.com', 'http://api.chejj.cn', 'http://api.mycjj.com', 'https://api.chejj.cn', 'https://api.mycjj.com');
         if (in_array($origin, $allowOrigin)) {
-            $response->header('Access-Control-Allow-Origin:' . $origin);
+            $response->header('Access-Control-Allow-Origin',$origin);
         }
-        $response->header('Access-Control-Allow-Headers:Origin,X-Requested-With,Content-Type,Accept,Authorization,Cookie');
-        $response->header('Access-Control-Allow-Methods:GET,POST');
-        $response->header("Access-Control-Allow-Credentials:true"); //允许携带cookie
-        $response->header("Access-Control-Max-Age:1728000"); //减少预检请求次数
+        $response->header('Access-Control-Allow-Headers','Origin,X-Requested-With,Content-Type,Accept,Authorization,Cookie');
+        $response->header('Access-Control-Allow-Methods','GET,POST,PUT,');
+        $response->header('Access-Control-Allow-Credentials',true); //允许携带cookie
+        $response->header('Access-Control-Max-Age',1728000); //减少预检请求次数
 
         return $next($request);
     }
