@@ -42,6 +42,6 @@ class CheckAgent
         $response->header('Access-Control-Allow-Credentials',true); //允许携带cookie
         $response->header('Access-Control-Max-Age',1728000); //减少预检请求次数
 
-        return $next($request);
+        return $response;
     }
 }
