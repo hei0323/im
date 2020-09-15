@@ -15,3 +15,4 @@ yarn-error.log
 .idea/
 workman/vendor/
 storage/logs/
+/storage/workerman.pid
