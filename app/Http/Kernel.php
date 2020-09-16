@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\CheckAgent;
+use App\Http\Middleware\EnableCORS;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -47,6 +48,7 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            EnableCORS::class,
         ],
     ];
 
@@ -69,6 +71,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'agent' => CheckAgent::class,
+        'cors' => EnableCORS::class,
     ];
 
     /**
