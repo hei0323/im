@@ -13,6 +13,7 @@ use GatewayWorker\Lib\Gateway;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
+use phpDocumentor\Reflection\Types\False_;
 
 class ChatMsgService
 {
@@ -157,17 +158,17 @@ class ChatMsgService
      * @return bool|int
      * @throws \Exception
      */
-    public function sendMsg(){
+    public function sendMsg($content){
         if($this->request->type==1){
             if($this->isOnline($this->request->receiver_id)){
-                Gateway::sendToUid($this->request->receiver_id,$this->request->contents);
+                Gateway::sendToUid($this->request->receiver_id,$content);
             }else{
                 return 1000;
             }
         }elseif($this->request->type == 2){
-            Gateway::sendToGroup($this->request->receive_id,$this->request->contents);
+            Gateway::sendToGroup($this->request->receive_id,$content);
         }elseif($this->request->type == 3){
-            Gateway::sendToAll($this->request->contents);
+            Gateway::sendToAll($content);
         }
         return true;
     }
@@ -272,6 +273,40 @@ class ChatMsgService
      */
     private function isOnline($userId){
         return Gateway::isUidOnline($userId);
+    }
+
+    /**
+     * 组装返回数据
+     * @param $senderId
+     * @param $sendType
+     * @return array|bool
+     */
+    public function makeUpData($senderId,$sendType)
+    {
+        switch ($sendType){
+            case 'msg':return $this->makeOnlineMsg($senderId);break;//初始化连接
+            default:return false;
+        }
+    }
+
+    /**
+     * 返回普通消息数据
+     * @param $senderId
+     * @return array
+     */
+    private function makeOnlineMsg(&$senderId){
+        $senderData =  Member::find($senderId,['member_id','member_avatar','member_name']);
+        $content = [
+            'code'=>0,
+            'type'=>'msg',
+            'data'=>[
+                'sender_id'=>$senderData->member_id,
+                'sender_avatar'=>$senderData->member_avatar,
+                'sender_name'=>$senderData->member_name,
+                'sender_content'=>$this->request->contents,
+            ]
+        ];
+        return $content;
     }
 
 }

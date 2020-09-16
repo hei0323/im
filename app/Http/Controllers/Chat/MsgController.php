@@ -30,7 +30,8 @@ class MsgController extends Controller
         $chatMsgService->saveOffline($senderId);
 
         //发送数据
-        $result = $chatMsgService->sendMsg();
+        $counts = $chatMsgService->makeUpData($senderId,'msg');
+        $result = $chatMsgService->sendMsg($counts);
         if($result == true){
             return response()->json(['code'=>0,'msg'=>'发送完成！','data'=>[]]);
         }elseif($result == 1000){
