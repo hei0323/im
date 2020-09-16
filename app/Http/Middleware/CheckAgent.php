@@ -38,9 +38,9 @@ class CheckAgent
             $response->header('Access-Control-Allow-Origin',$origin);
         }
         $response->header('Access-Control-Allow-Headers','Origin,X-Requested-With,Content-Type,Accept,Authorization,Cookie');
-        $response->header('Access-Control-Allow-Methods','GET,POST,PUT,');
-        $response->header('Access-Control-Allow-Credentials',true); //允许携带cookie
-        $response->header('Access-Control-Max-Age',1728000); //减少预检请求次数
+        $response->header('Access-Control-Allow-Methods','GET,POST,PUT');
+        $response->header('Access-Control-Allow-Credentials','true'); //允许携带cookie
+        $response->header('Access-Control-Max-Age','1728000'); //减少预检请求次数
 
         return $response;
     }
