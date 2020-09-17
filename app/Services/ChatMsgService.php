@@ -159,6 +159,7 @@ class ChatMsgService
      * @throws \Exception
      */
     public function sendMsg($content){
+
         if($this->request->type==1){
             if($this->isOnline($this->request->receiver_id)){
                 Gateway::sendToUid($this->request->receiver_id,$content);
@@ -306,7 +307,7 @@ class ChatMsgService
                 'sender_content'=>$this->request->contents,
             ]
         ];
-        return $content;
+        return json_encode($content,256);
     }
 
 }

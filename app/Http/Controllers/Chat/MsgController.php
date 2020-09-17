@@ -32,12 +32,12 @@ class MsgController extends Controller
         //发送数据
         $counts = $chatMsgService->makeUpData($senderId,'msg');
         $result = $chatMsgService->sendMsg($counts);
-        if($result == true){
+        if($result === true){
             return response()->json(['code'=>0,'msg'=>'发送完成！','data'=>[]]);
-        }elseif($result == 1000){
-            response()->json(['code'=>1000,'msg'=>'用户不在线！','data'=>[]]);
+        }elseif($result === 1000){
+            return response()->json(['code'=>1000,'msg'=>'用户不在线！','data'=>[]]);
         }else{
-            response()->json(['code'=>1010,'msg'=>'failed！','data'=>[]]);
+            return response()->json(['code'=>1010,'msg'=>'failed！','data'=>[]]);
         }
 
     }
