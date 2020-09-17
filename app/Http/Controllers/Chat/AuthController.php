@@ -16,7 +16,8 @@ class AuthController extends Controller
     public function bind(ChatAuthService $chatAuthService)
     {
         if($code = $chatAuthService->bind()){
-            return response()->json(['code'=>0,'msg'=>'用户绑定完成！']);
+            $memberInfo = $chatAuthService->memberInfo();
+            return response()->json(['code'=>0,'msg'=>'用户绑定完成！','data'=>$memberInfo]);
         }else{
             return response()->json(['code'=>$code,'msg'=>'用户绑定完成！']);
         }

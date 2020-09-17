@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Models\Member;
 use GatewayWorker\Lib\Gateway;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -50,6 +51,18 @@ class ChatAuthService
         }
 
         return true;
+    }
+
+    public function memberInfo($memberId = null){
+        if($memberId == null){
+            $memberId = $this->memberId;
+        }
+        $memberInfo = Member::find($memberId,['member_id','member_avatar','member_name']);
+        if(!empty($memberInfo)){
+            return $memberInfo;
+        }else{
+            return [];
+        }
     }
 
 
