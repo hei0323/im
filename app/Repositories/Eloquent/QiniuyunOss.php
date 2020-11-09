@@ -15,7 +15,7 @@ class QiniuyunOss extends OssRepository implements OssInterface
     private $ossClient;
 
 
-    private function __construct()
+    public function __construct()
     {
         try {
             $this->ossClient = new OssClient($this->accessKeyId, $this->accessKeySecret, $this->endpoint);

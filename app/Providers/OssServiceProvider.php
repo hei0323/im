@@ -20,13 +20,15 @@ class OssServiceProvider extends ServiceProvider
     public function register()
     {
         //绑定阿里云OSS服务/上下文绑定
-//        $this->app->when(RedisTestController::class)
-//            ->needs(OssInterface::class)
-//            ->give(AliyunOss::class);
+        $this->app->when(RedisTestController::class)
+            ->needs(OssInterface::class)
+            ->give(AliyunOss::class);
         //绑定七牛云OSS服务
-        $this->app->bind(OssInterface::class,UpyunOss::class);
+        $this->app->when(ConfigTestController::class)
+            ->needs(OssInterface::class)
+            ->give(QiniuyunOss::class);
         //绑定又拍云OSS服务/绑定接口到实现
-        //$this->app->bind(OssInterface::class,UpyunOss::class);
+        $this->app->bind(OssInterface::class,AliyunOss::class);
     }
 
     /**

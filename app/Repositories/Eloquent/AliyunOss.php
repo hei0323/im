@@ -12,7 +12,7 @@ class AliyunOss extends OssRepository implements OssInterface
 {
     private $accessKeyId = "LTAI4Fzjkkpzjauut9VshBtz";
     private $accessKeySecret = "6lFRbZlQciykXSYEZ2719sBV0W3rzk";
-    private $endpoint = "chejj-oss.oss-cn-hangzhou.aliyuncs.com";
+    private $endpoint = "oss-cn-hangzhou.aliyuncs.com";
     private $bucket = "chejj-oss";
     private $ossClient;
 
@@ -31,12 +31,14 @@ class AliyunOss extends OssRepository implements OssInterface
      */
     public function get($object)
     {
-        $object = "oss-php-sdk-test/upload-test-object-name.txt";
+        $object = "images/cesi.png";
         $options = array();
         try {
             $content = $this->ossClient->getObject($this->bucket, $object, $options);
+            header("Content-type: image/png");
+            echo $content;
         } catch (OssException $e) {
-            return;
+            print $e->getMessage();
         }
     }
 
@@ -48,7 +50,8 @@ class AliyunOss extends OssRepository implements OssInterface
         $object = "images/xiaoming.txt";
         $content = "Hello, OSS!"; // 上传的文件内容
         try {
-            $this->ossClient->putObject($this->bucket, $object, $content);
+            $result = $this->ossClient->putObject($this->bucket, $object, $content);
+            dd($result);
         } catch (OssException $e) {
             print $e->getMessage();
         }
