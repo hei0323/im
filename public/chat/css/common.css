@@ -1,0 +1,367 @@
+body {
+    background-color: #2e2f3d;
+}
+
+.msgbox {
+    width: 900px;
+    height: 820px;
+    margin: 60px auto;
+    background-color: #fff;
+    border-radius: 0 0 5px 5px;
+}
+
+.leftbar {
+    float: left;
+    width: 255px;
+    height: 820px;
+    border-right: 1px solid #E7E7E7;
+}
+
+.leftbar .user {
+    width: 255px;
+    height: 105px;
+    background-color: #FF534C;
+}
+
+.leftbar .user img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    margin: 10px;
+    vertical-align: top;
+}
+
+/* 用户模块 */
+.user-info {
+    display: inline-block;
+}
+
+.user-info span {
+    display: block;
+    margin-top: 10px;
+    font-size: 18px;
+    color: #fff;
+}
+
+.user-info i {
+    display: block;
+    width: 52px;
+    height: 18px;
+    border-radius: 3px;
+    margin-top: 6px;
+    background: url(../images/icons.png) no-repeat;
+}
+
+/* 搜索框 */
+.search-bar {
+    width: 232px;
+    height: 25px;
+    margin-left: 10px;
+}
+
+.search-bar input {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    padding-left: 30px;
+    background: url(../images/search.png) no-repeat #FFF 10px 5px;
+}
+
+/* 左侧列表 */
+.dialog {
+    height: 40px;
+    padding: 10px;
+    background-color: #f2f5f9;
+    font-size: 13px;
+}
+
+.dialog .dialog-avator {
+    float: left;
+    width: 20px;
+    height: 20px;
+}
+
+.dialog .dialog-avator img {
+    width: 100%;
+}
+
+.dialog .dialog-name {
+    display: inline-block;
+    width: 130px;
+    margin-left: 10px;
+}
+
+.dialog .dialog-label {
+    float: right;
+    margin-top: 2px;
+}
+
+/* 选中后样式 */
+
+.dialog.active {
+    font-size: 14px;
+    height: 50px;
+    background: #D2E6F9;
+}
+
+.dialog.active .dialog-avator {
+    width: 30px;
+    height: 30px;
+}
+
+
+.label {
+    font-size: 12px;
+    border-radius: 2px;
+    display: inline-block;
+    padding: 0 4px;
+    line-height: 16px;
+    color: #FFF;
+    background: #F23030;
+}
+
+.label.yellow {
+    background-color: #FFC267;
+}
+
+.label.purple {
+    background: #8f91ff;
+}
+
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 右边窗口 */
+
+.rightbar {
+    float: left;
+    height: 820px;
+    width: 645px;
+}
+
+.box-header {
+    height: 60px;
+    padding: 10px;
+    background-color: #fafafa;
+    border-bottom: 1px solid #E7E7E7;
+}
+
+.box-header .box-avator {
+    float: left;
+    width: 40px;
+    height: 40px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.box-header .box-avator img {
+    width: 100%;
+}
+
+.box-header .box-name {
+    display: inline-block;
+    font-size: 14px;
+    margin-left: 10px;
+    color: #343036;
+}
+
+/* 聊天窗口 */
+.chat-box {
+    width: 100%;
+    height: 640px;
+    overflow-y: scroll;
+    padding: 0 20px;
+    border-bottom: 1px solid #E7E7E7;
+}
+
+.chat-box .message {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.message .timespace {
+    font-size: 13px;
+    color: #a1a6af;
+    margin: 8px;
+    text-align: center;
+}
+
+.message .chat-name {
+    font-size: 12px;
+    color: #A1A6AF;
+    margin: 8px;
+    padding-left: 50px;
+}
+
+.message .chat-header {
+    float: left;
+    width: 32px;
+    height: 32px;
+}
+
+.message .chat-header img {
+    width: 100%;
+}
+
+.message .chat-msg {
+    position: relative;
+    float: left;
+    margin-left: 15px;
+    padding: 15px;
+    font-size: 14px;
+    background-color: #efeeee;
+    border-radius: 5px;
+    max-width: 520px;
+}
+
+.message .chat-msg .leftjiao{
+    position: absolute;
+    left: -5px;
+    top: 8px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-color: transparent #efeeee transparent transparent;
+    border-width: 8px 8px 8px 0;
+}
+
+/* 右聊天信息 */
+.message .rchat-header {
+    float: right;
+    width: 32px;
+    height: 32px;
+}
+
+.message .rchat-header img {
+    width: 100%;
+}
+
+.message .rchat-name{
+    font-size: 12px;
+    color: #A1A6AF;
+    margin: 8px;
+    padding-right: 50px;
+    text-align: right;
+}
+
+.message .rchat-msg {
+    position: relative;
+    float: right;
+    margin-right: 15px;
+    padding: 15px;
+    font-size: 14px;
+    background-color: #d0e9ff;
+    border-radius: 5px;
+    max-width: 520px;
+}
+
+.message .rchat-msg .rightjiao{
+    position: absolute;
+    right: -5px;
+    top: 8px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-color: transparent transparent transparent #d0e9ff;
+    border-width: 8px 0px 8px 8px;
+}
+
+/* 清除浮动 */
+.clearfix::before, .clearfix::after{
+    display: table;
+    content: '';
+}
+
+.clearfix::after{
+    display: table;
+    clear: both;
+}
+
+.clearfix{
+    zoom: 1;
+}
+
+/* 信息输入窗口 */
+
+.input-box{
+    width: 645px;
+    height: 121px;
+}
+
+.input-box .input-header{
+    height: 35px;
+    padding-top: 10px;
+    padding-left: 20px;
+}
+
+.input-box .input-header span{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.input-header .emoji{
+    background: url(../images/sprite.png) no-repeat center;
+    background-position: -196px -70px;
+}
+
+.input-header .emoji:hover{
+    background-position: -166px -70px;
+}
+
+.input-header .pic{
+    background: url(../images/sprite.png) no-repeat center;
+    background-position-x: -57px;
+    background-position-y: -120px;
+}
+
+.input-header .pic:hover{
+    background-position: -29px -120px;
+}
+
+.input-header .love{
+    background: url(../images/sprite.png) no-repeat center;
+    background-position-x: 0;
+    background-position-y: -120px;
+}
+
+.input-header .love:hover{
+    background-position: -226px -68px;
+}
+
+.input-box .input-msg{
+    height: 50px;
+}
+
+.input-box .input-msg textarea{
+    border: 0;
+    padding: 0 20px;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    border-radius: 0;
+    resize: none;
+    font-size: 13px;
+    font-family: inherit;
+    overflow-y: auto;
+}
+
+.input-box .send{
+    float: right;
+    width: 60px;
+    height: 27px;
+    margin-top: 3px;
+    margin-right: 10px;
+    font-size: 12px;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    background: #fff;
+    color: #343036;
+    border: 1px solid #d9d9d9;
+}

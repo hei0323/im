@@ -12,8 +12,15 @@
 //即时通讯路由
 Route::namespace('Chat')->group(function (){
     Route::middleware('agent')->group(function (){
-        Route::get('/friend','FriendController@index');
-        Route::get('/group','GroupController@index');
+        Route::post('/friend/addApply','FriendController@addApply');
+        Route::get('/friend/addConfirm','FriendController@addConfirm');
+        Route::get('/friend/del','FriendController@del');
+        Route::get('/friend/list','FriendController@list');
+
+        Route::post('/group/addApply','GroupController@add');
+        Route::get('/group/addConfirm','GroupController@addConfirm');
+        Route::get('/group/del','GroupController@del');
+        Route::get('/group/list','GroupController@list');
 
         Route::post('/msg/send','MsgController@send');
         Route::get('/msg/list/save','MsgController@msgListSave');

@@ -39,7 +39,7 @@ class Events
     /**
      * 当客户端连接上gateway进程时(TCP三次握手完毕时)触发的回调函数
      */
-    public static function onConnect($client_id)
+    public static function onConnect($clientId)
     {
 //        echo '用户'.$client_id."完成onConnect连接\n";
 //        Gateway::sendToClient($client_id, json_encode(array(
@@ -51,26 +51,26 @@ class Events
     /**
      * 当客户端连接上gateway完成websocket握手时触发的回调函数
      */
-    public static function onWebSocketConnect($client_id, $data)
+    public static function onWebSocketConnect($clientId, $data)
     {
         //直接返回$client_id 由让web项目处理
-        echo '用户'.$client_id."完成onWebSocketConnect连接\n";
-        Gateway::sendToClient($client_id, json_encode(array(
+        echo '用户'.$clientId."完成onWebSocketConnect连接\n";
+        Gateway::sendToClient($clientId, json_encode(array(
             'type'      => 'init',
-            'client_id' => $client_id
+            'clientId' => $clientId
         )),256);
     }
 
     /**
      * 有消息时触发该方法
      */
-    public static function onMessage($client_id, $message)
+    public static function onMessage($clientId, $message)
     {
         //不做任何业务处理
-        echo '用户'.$client_id.":$message\n";
+        echo '用户'.$clientId.":$message\n";
         Gateway::sendToClient($client_id, json_encode(array(
             'msg'      => 'init',
-            'content' => $client_id,
+            'content' => $clientId,
             'client_id' => $message
         )));
     }
@@ -78,8 +78,8 @@ class Events
     /**
      * 当用户断开连接时触发的方法
      */
-    public static function onClose($client_id)
+    public static function onClose($clientId)
     {
-        echo '用户'.$client_id."断开连接\n";
+        echo '用户'.$clientId."断开连接\n";
     }
 }

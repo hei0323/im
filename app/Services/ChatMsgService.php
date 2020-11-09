@@ -4,16 +4,15 @@
 namespace App\Services;
 
 
-use App\Models\IMGroup;
 use App\Models\IMMsg;
 use App\Models\IMMsgList;
 use App\Models\IMMsgOffline;
-use App\Models\Member;
+use App\Models\IMSession;
+use App\Models\IMUserSession;
 use GatewayWorker\Lib\Gateway;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
-use phpDocumentor\Reflection\Types\False_;
 
 class ChatMsgService
 {
@@ -25,76 +24,97 @@ class ChatMsgService
         $this->request = $request;
     }
 
-
     /**
      * 消息持久存储
-     * @param $senderId
-     * @return bool|mixed
+     *
+     * @param $senderInfo
+     * @param $receiverInfo
+     * @param $msgData
+     * @return bool
      */
-    public function saveMsg($senderId)
+    public function saveMsg(&$senderInfo, &$sessionInfo, &$msgData)
     {
-        //存入数据表msg
+        if ($sessionInfo['session_type'] == 1) {
+            $receiverId = $sessionInfo['receiver_id'];
+        } else {
+            $receiverId = $sessionInfo['group_id'];
+        }
+
         $msgModel = new IMMsg();
-        $msgModel->receiver_id = $this->request->receiver_id;
-        $msgModel->contents = $this->request->contents;
-        $msgModel->type = $this->request->type;
-        $msgModel->sender_id = $senderId;
-        if($msgModel->save()){
-            $this->msgId =  $msgModel->msg_id;
-            $this->msgListAdd($this->request->receiver_id,$senderId,$this->msgId,$this->request->type);
-            $this->unreadMsgAdd($senderId);
+        $msgModel->receiver_id = $receiverId;
+        $msgModel->sender_id = $senderInfo['member_id'];
+        $msgModel->sender_name = $senderInfo['member_name'];
+        $msgModel->sender_avatar = $senderInfo['member_avatar'];
+        $msgModel->contents = $msgData['contents'];
+        $msgModel->session_id = $sessionInfo['session_id'];
+        $msgModel->session_type = $sessionInfo['session_type'];
+        if ($msgModel->save()) {
             return $this->msgId;
-        }else{
+        } else {
             return false;
         }
     }
 
     /**
-     * 离线消息同步库存储
+     * 更新会话信息
+     * @param $msgId
+     * @param $senderInfo
+     * @param $msgData
+     * @return bool
      */
-    public function saveOffline($senderId){
-
-        switch ($this->request->type){
-            case 0:
-            case 1:
-                $this->offlinePerson($senderId);
-                break;
-            case 2:
-                $this->offlineGroup($senderId);
-                break;
-            case 3:
-                $this->offlineAll($senderId);
-                break;
-            default:
-                return false;
+    public function updateSession($msgId, &$senderInfo, &$msgData)
+    {
+        $sessionModel = IMSession::where('session_uuid', $msgData['session_uuid'])->find();
+        $sessionModel->last_msg_id = $msgId;
+        $sessionModel->last_msg_contents = $msgData['contents'];
+        $sessionModel->last_msg_sender_id = $senderInfo['member_id'];
+        $sessionModel->last_msg_sender_name = $senderInfo['member_name'];
+        $sessionModel->last_msg_send_time = time();
+        if ($sessionModel->save()) {
+            return $this->msgId;
+        } else {
+            return false;
         }
+    }
+
+
+    public function updateUserSession($isOnline, $msgId, &$msgData)
+    {
+        $sessionUserModel = IMUserSession::where([['session_uuid', '=', $msgData['session_uuid']], ['user_id', '=', $msgData['receiverId']]])->find();
+        if ($isOnline) {
+            $sessionUserModel->msg_receive_id = $msgId;
+            $sessionUserModel->mag_receive_time = time();
+        } else {
+            $sessionUserModel->msg_offline_id = $msgId;
+            $sessionUserModel->mag_offline_time = time();
+        }
+        $sessionUserModel->unread_num += 1;
+        if ($sessionUserModel->save()) {
+            return $this->msgId;
+        } else {
+            return false;
+        }
+    }
+
+
+    /**
+     * 获取会话信息
+     */
+    public function getSessionInfo($uuid)
+    {
+        $userSessionModel = new IMSession();
+        return $userSessionModel::with(['session_uuid', '=', $uuid])->get()->toArray();
     }
 
     /**
-     * 新增用户消息列表
-     * @param $receiverId
-     * @param $senderId
-     * @param $msgId
-     * @param $type
-     * @return bool
+     * 获取用户会话信息
      */
-    public function msgListAdd($receiverId,$senderId,$msgId,$type){
-
-        if($type==2){
-            $groupMembers = Gateway::getAllGroupIdList($this->request->group_id);
-            if(!empty($groupMembers)){
-                foreach ($groupMembers as $value){
-                    $result = Redis::hset('im_list:'.$value,$senderId,$msgId);
-                }
-                return true;
-            }else{
-                return false;
-            }
-        }else{
-            $result = Redis::hset('im_list:'.$receiverId,$senderId,$msgId);
-        }
-        return $result;
+    public function getUserSessionInfo($uuid, $memberId)
+    {
+        $userSessionModel = new IMUserSession();
+        return $userSessionModel::with(['session_uuid', '=', $uuid], ['user_id', '=', $memberId])->get();
     }
+
 
     /**
      * 获取用户消息列表
@@ -104,14 +124,14 @@ class ChatMsgService
 
     public function msgListShow($receiverId)
     {
-        $listArr =  IMMsgList::with(['member:member_id,member_name','group:title,avatar,group_id'])->get()->toArray();
-        $unreadArr = Redis::hgetall('im_unread:'.$receiverId);
+        $listArr = IMMsgList::with(['member:member_id,member_name', 'group:title,avatar,group_id'])->get()->toArray();
 
-        foreach ($listArr as $key=>$value){
-            if (array_key_exists($value['sender_id'],$unreadArr)){
+        $unreadArr = Redis::hgetall('im_unread:' . $receiverId);
+        foreach ($listArr as $key => $value) {
+            if (array_key_exists($value['sender_id'], $unreadArr)) {
                 $unread = unserialize($unreadArr[$value['sender_id']]);
                 $listArr[$key]['unread_num'] = $unread['num'];
-            }else{
+            } else {
                 $listArr[$key]['unread_num'] = 0;
             }
         }
@@ -123,18 +143,19 @@ class ChatMsgService
      * @param $receiverId
      * @return bool
      */
-    public function msgListSave($receiverId){
-        $msgList = Redis::hgetall('im_list:'.$receiverId);
+    public function msgListSave($receiverId)
+    {
+        $msgList = Redis::hgetall('im_list:' . $receiverId);
         $msgList = DB::table('im_msg')
-            ->whereIn('msg_id',$msgList)
-            ->orderBy('readed_at','asc')
-            ->orderBy('msg_id','desc')
+            ->whereIn('msg_id', $msgList)
+            ->orderBy('readed_at', 'asc')
+            ->orderBy('msg_id', 'desc')
             ->get();
-        foreach ($msgList as $key=>$value){
+        foreach ($msgList as $key => $value) {
             IMMsgList::updateOrCreate(
-                ['sender_id'=>$value->sender_id,'receiver_id'=>$value->receiver_id],
-                ['msg_id'=>$value->msg_id,'receiver_id'=>$value->receiver_id,'sender_id'=>$value->sender_id,
-                    'group_id'=>$value->group_id,'contents'=>$value->contents,'type'=>$value->type]
+                ['sender_id' => $value->sender_id, 'receiver_id' => $value->receiver_id],
+                ['msg_id' => $value->msg_id, 'receiver_id' => $value->receiver_id, 'sender_id' => $value->sender_id,
+                    'group_id' => $value->group_id, 'contents' => $value->contents, 'type' => $value->type]
             );
         }
         return true;
@@ -145,11 +166,12 @@ class ChatMsgService
      * @param $senderId
      * @return mixed
      */
-    public function unreadMsgDel($receiverId){
-        if($this->request->reset == 1){
-            return Redis::hdel('im_unread:'.$receiverId);
-        }else{
-            return Redis::hdel('im_unread:'.$receiverId,$this->request->receiver_id);
+    public function unreadMsgDel($receiverId)
+    {
+        if ($this->request->reset == 1) {
+            return Redis::hdel('im_unread:' . $receiverId);
+        } else {
+            return Redis::hdel('im_unread:' . $receiverId, $this->request->receiverId);
         }
     }
 
@@ -158,18 +180,24 @@ class ChatMsgService
      * @return bool|int
      * @throws \Exception
      */
-    public function sendMsg($content){
+    public function sendMsg(&$senderInfo, &$sessionInfo, &$sendData)
+    {
 
-        if($this->request->type==1){
-            if($this->isOnline($this->request->receiver_id)){
-                Gateway::sendToUid($this->request->receiver_id,$content);
-            }else{
-                return 1000;
-            }
-        }elseif($this->request->type == 2){
-            Gateway::sendToGroup($this->request->receive_id,$content);
-        }elseif($this->request->type == 3){
-            Gateway::sendToAll($content);
+        $contents = $this->makeUpData(array_merge($senderInfo, $sendData), 'msg');
+        switch ($sessionInfo['session_type']) {
+            case 1:
+                Gateway::sendToUid($sessionInfo['receiver_id'], $contents);
+                break;
+            case 2:
+            case 3:
+            case 4:
+                Gateway::sendToGroup($sessionInfo['group_id'], $contents);
+                break;
+            case 0:
+                Gateway::sendToAll($contents);
+                break;
+            default:
+                return false;
         }
         return true;
     }
@@ -179,11 +207,12 @@ class ChatMsgService
      * @param $senderId
      * @return bool|mixed
      */
-    private function offlineAll(&$senderId){
+    private function offlineAll(&$senderId)
+    {
         $groupMembers = Gateway::getAllUidList();
-        if(!empty($groupMembers)){
+        if (!empty($groupMembers)) {
             return $this->offlinePerson($senderId);
-        }else{
+        } else {
             return false;
         }
     }
@@ -193,14 +222,15 @@ class ChatMsgService
      * @param $senderId
      * @return bool|mixed
      */
-    private function offlineGroup(&$senderId){
-        $groupMembers = Gateway::getAllGroupIdList($this->request->group_id);
-        if(!empty($groupMembers)){
-            foreach ($groupMembers as $value){
+    private function offlineGroup(&$senderId)
+    {
+        $groupMembers = Gateway::getAllGroupIdList($this->request->groupId);
+        if (!empty($groupMembers)) {
+            foreach ($groupMembers as $value) {
                 $this->offlinePerson($senderId);
             }
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -210,21 +240,22 @@ class ChatMsgService
      * @param $senderId
      * @return bool|mixed
      */
-    private function offlinePerson(&$senderId){
+    private function offlinePerson(&$senderId)
+    {
 
-        if($this->isOnline($senderId)) return true;
+        if ($this->isOnline($senderId)) return true;
 
         $msgOfflineModel = new IMMsgOffline();
         $msgOfflineModel->msg_id = $this->msgId;
         $msgOfflineModel->contents = $this->request->contents;
         $msgOfflineModel->sender_id = $senderId;
-        $msgOfflineModel->receiver_id = $this->request->receiver_id;
+        $msgOfflineModel->receiver_id = $this->request->receiverId;
         $msgOfflineModel->type = $this->request->type;
-        $msgOfflineModel->group_id = $this->request->type == 2?$this->request->receiver_id:0;
+        $msgOfflineModel->group_id = $this->request->type == 2 ? $this->request->receiverId : 0;
 
-        if($msgOfflineModel->save()){
+        if ($msgOfflineModel->save()) {
             return $msgOfflineModel->id;
-        }else{
+        } else {
             return false;
         }
 
@@ -236,17 +267,18 @@ class ChatMsgService
      * @param $senderId
      * @return mixed
      */
-    private function unreadMsgAdd(&$senderId){
+    private function unreadMsgAdd(&$senderId)
+    {
         $unread = [];
-        if($unread = Redis::hget('im_unread:'.$this->request->receiver_id,$senderId)){
+        if ($unread = Redis::hget('im_unread:' . $this->request->receiverId, $senderId)) {
             $unread = unserialize($unread);
-            $unread['num'] +=1;
-        }else{
-            $unread['sid'] =$senderId;
-            $unread['mid'] =$this->msgId;
-            $unread['num'] =1;
+            $unread['num'] += 1;
+        } else {
+            $unread['sid'] = $senderId;
+            $unread['mid'] = $this->msgId;
+            $unread['num'] = 1;
         }
-        return Redis::hset('im_unread:'.$this->request->receiver_id,$senderId,serialize($unread));
+        return Redis::hset('im_unread:' . $this->request->receiverId, $senderId, serialize($unread));
     }
 
 
@@ -258,13 +290,13 @@ class ChatMsgService
     public function sendOfflineMsg($receiverId)
     {
         //判断是否在线
-        if(!$this->isOnline($receiverId)) return false;
+        if (!$this->isOnline($receiverId)) return false;
         //获取离线消息
-        $offlineMsg = IMMsgOffline::with(['member:member_id,member_name','group:title,avatar,group_id'])->get()->toArray();
+        $offlineMsg = IMMsgOffline::with(['member:member_id,member_name', 'group:title,avatar,group_id'])->get()->toArray();
         Gateway::sendToUid($receiverId, json_encode(array(
-            'type'      => 'offline_pull',
+            'type' => 'offline_pull',
             'data' => $offlineMsg
-        )),256);
+        )), 256);
     }
 
     /**
@@ -272,7 +304,8 @@ class ChatMsgService
      * @param $userId
      * @return int
      */
-    private function isOnline($userId){
+    private function isOnline($userId)
+    {
         return Gateway::isUidOnline($userId);
     }
 
@@ -282,12 +315,20 @@ class ChatMsgService
      * @param $sendType
      * @return array|bool
      */
-    public function makeUpData($senderId,$sendType)
+    private function makeUpData($sendData, $sendType)
     {
-        switch ($sendType){
-            case 'msg':return $this->makeOnlineMsg($senderId);break;//初始化连接
-            default:return false;
-        }
+        $contents = [
+            'code' => 0,
+            'type' => $sendType,
+            'data' => [
+                'sender_id' => $sendData['member_id'],
+                'sender_avatar' => $sendData['member_avatar'],
+                'sender_name' => $sendData['member_name'],
+                'sender_content' => $sendData['contents'],
+            ]
+        ];
+
+        return json_encode($contents, 256);
     }
 
     /**
@@ -295,19 +336,19 @@ class ChatMsgService
      * @param $senderId
      * @return array
      */
-    private function makeOnlineMsg(&$senderId){
-        $senderData =  Member::find($senderId,['member_id','member_avatar','member_name']);
+    private function makeOnlineMsg(&$sendData)
+    {
         $content = [
-            'code'=>0,
-            'type'=>'msg',
-            'data'=>[
-                'sender_id'=>$senderData->member_id,
-                'sender_avatar'=>$senderData->member_avatar,
-                'sender_name'=>$senderData->member_name,
-                'sender_content'=>$this->request->contents,
+            'code' => 0,
+            'type' => 'msg',
+            'data' => [
+                'sender_id' => $sendData['member_id'],
+                'sender_avatar' => $sendData['member_avatar'],
+                'sender_name' => $sendData['member_name'],
+                'sender_content' => $sendData['contents'],
             ]
         ];
-        return json_encode($content,256);
+        return json_encode($content, 256);
     }
 
 }

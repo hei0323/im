@@ -175,6 +175,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
+        Emadadly\LaravelUuid\LaravelUuidServiceProvider::class,
+        App\Providers\OssServiceProvider::class,
 
     ],
 

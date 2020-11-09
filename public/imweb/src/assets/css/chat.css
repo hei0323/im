@@ -1,0 +1,344 @@
+.mainBox {
+    width: 65%;
+    height: 80%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.navRight, .navLeft {
+    width: 60px;
+    height: 100%;
+}
+
+.navLeft {
+    border-radius: 10px 0 0 10px;
+    background-color: #394056;
+    float: left;
+}
+
+.navRight {
+    border-radius: 0 10px 10px 0;
+    background-color: #efefef;
+    float: right;
+}
+
+.funcMiddle {
+    height: 100%;
+    background-color: #fdfdfd;
+    margin: 0 60px;
+}
+
+/*左侧功能主菜单导航*/
+.state {
+    width: 70px;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+.stateButton {
+    display: inline-block;
+    border: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 100%;
+    outline: none;
+}
+.offline {
+    background-color: #ea6b5e;
+}
+.online {
+    background-color: #62c655;
+}
+.busy {
+    background-color: #f3bf4f;
+}
+
+.avatar {
+    width: 45px;
+    height: 45px;
+    border: 3px solid honeydew;
+    border-radius: 100%;
+    margin: 30px auto 0;
+    background-image: url("../images/avatar.png");
+}
+
+.mane svg{
+    height: 58px;
+    width: 58px;
+    padding: 10px 10px;
+    box-sizing: border-box;
+    display: block;
+}
+.icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: #555546;
+    overflow: hidden;
+}
+.icon:hover{
+    fill: #c6c698;
+    border-left: 2px solid #dcdc98;
+}
+
+/*中间功能主体区域*/
+.addressBooks {
+    box-sizing: border-box;
+    width: 27%;
+    height: 100%;
+    float: left;
+    overflow: auto;
+}
+.chatBox {
+    position: relative;
+    height: 100%;
+    border-left: 3px solid #f0f0f0;
+    margin-left: 27%;
+}
+.search{
+    margin-top: 12px;
+    margin-left: 12px;
+    width: 74%;
+    border-radius: 50px;
+    border: 2px solid #f0f0f0;
+    box-sizing: border-box;
+}
+.search>span{
+    margin: 15px 5px 0 5px;
+    width: 25px;
+    height: 25px;
+    background-image: url("../images/search.png");
+    background-repeat: no-repeat;
+    background-size: 30px 30px;
+    background-position: 8% center;
+    display: inline-block;
+}
+.search>input {
+    border: none;
+    font-size: 15px;
+    line-height: 48px;
+    color: #575756;
+    outline: none;
+    backface-visibility: hidden;
+}
+.contact {
+    height: 80%;
+    margin-top: 17px;
+    overflow: auto;
+}
+.contactMember {
+    height: 60px;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    padding-left: 12px;
+}
+.checkedMember{
+    background-color: #f4f4f4;
+}
+
+.memberLeft{
+    width: 18%;
+    align-self: center;
+}
+.contactInfo{
+    clear:both;
+    overflow: hidden;
+}
+.contactInfo>img,.myName{
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+}
+.memberRight {
+    width: 82%;
+    height: 40px;
+    align-self: center;
+    padding-left: 3px;
+}
+.contactName {
+    font-weight: bold;
+    font-size: 14px;
+    float: left;
+}
+.contactTime{
+    margin-right: 5px;
+    float: right;
+}
+.contactMsg{
+    clear: both;
+}
+/*聊天区域*/
+.chatHeader {
+    position: absolute;
+    box-sizing: border-box;
+    top: 0;
+    margin:15px 0px 0 20px;
+    width:calc(100% - 40px);
+    height: 60px;
+    border-bottom: 2px solid #efefef;
+}
+.chatBody{
+    overflow-y:scroll;
+    position: absolute;
+    box-sizing: border-box;
+    padding: 20px 20px 0 20px;
+    top: 70px;
+    bottom: 120px;
+    width:100%;
+    height: auto;
+}
+
+.chatBody:hover::-webkit-scrollbar-thumb,.contact:hover::-webkit-scrollbar-thumb{
+    display: block;
+}
+.chatBody::-webkit-scrollbar,.contact::-webkit-scrollbar{
+    width: 3px;
+    height: 1px;
+}
+.chatBody::-webkit-scrollbar-thumb,.contact::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #53535355;
+    display: none;
+}
+.chatBody::-webkit-scrollbar-track,.contact::-webkit-scrollbar-track{
+    display: none;
+}
+
+
+.chatSend{
+    margin: 20px 0px 20px 20px;
+    padding-right: 20px;
+    position: absolute;
+    box-sizing: border-box;
+    bottom: 0;
+    width:calc(100% - 20px);
+    height: 100px;
+    overflow: auto;
+}
+.chatHeader li {
+    display: inline;
+}
+.chatHeader img {
+    float: left;
+}
+.contactAbstract {
+    float: left;
+    padding-left: 10px;
+}
+.contactAbstract>span {
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 3px;
+}
+.contactFunc {
+    float: right;
+    height: 50px;
+    width: 100px;
+}
+.msgContent {
+    width: auto;
+    padding: 5px;
+    margin-left: 50px;
+    background-color: #efefef;
+    border-radius: 5px;
+    display:inline-block;
+}
+.contactInfo>img+span {
+    padding: 5px;
+    color: #acabab;
+}
+.myName,.myAvatar{
+    float: right;
+}
+.myMsg {
+    float: right;
+    text-align: right;
+    overflow: hidden;
+    margin-bottom: 6px;
+    margin-right: 43px;
+}
+.chatBody>ul>li{
+    margin: 6px 0px;
+}
+
+.attach{
+    height: 30px;
+    width: 100%;
+    border-top: 2px solid #efefef;
+}
+.attach span{
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin: 5px 8px;
+}
+.emoji {
+    background: url(../images/sprite.png) no-repeat center;
+    background-position: -196px -70px;
+}
+.emoji:hover {
+    background-position: -166px -70px;
+}
+
+.pic {
+    background: url(../images/sprite.png) no-repeat center;
+    background-position-x: -57px;
+    background-position-y: -120px;
+}
+
+.pic:hover {
+    background-position: -29px -120px;
+}
+
+.love {
+    background: url(../images/sprite.png) no-repeat center;
+    background-position-x: 0;
+    background-position-y: -120px;
+}
+
+.love:hover {
+    background-position: -226px -68px;
+}
+
+.sendMsg>input {
+    border: none;
+    height: 60px;
+    width:88%;
+    text-decoration: none;
+    display: inline-block;
+    float: left;
+    outline: none;
+}
+.sendMsg{
+    border-radius: 8px;
+    border: 2px solid #efefef;
+    overflow: hidden;
+}
+.sendMsg:hover{
+    border: 1px solid #63b448;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 4px rgba(102,175,233,.6);
+}
+.sendMsg>button{
+    margin: 0 auto;
+    width: calc(12% - 8px);
+    height: 60px;
+    display: inline-block;
+    border: none;
+    text-decoration: none;
+    background-color: #e1f0db;
+    color: #c3e2b8;
+    text-align: center;
+    font-size: 20px;
+    cursor: pointer;
+    float: right;
+    box-sizing: content-box;
+    outline: none;
+}
+.sendMsg>button:hover{
+    background-color: #63b448;
+}
