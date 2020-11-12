@@ -76,7 +76,6 @@ class FilterWords
      */
     public function filter($str, $level = 1, $skipDistance = 2, $isReplace = true, $replace = '*')
     {
-
         //允许跳过的最大距离
         if ($level == 1) {
             $maxDistance = strlen($str) + 1;
