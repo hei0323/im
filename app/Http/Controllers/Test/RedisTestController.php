@@ -13,7 +13,6 @@ class RedisTestController extends Controller
     //
     public function index(Request $request,OssInterface $oss,TestRedisValidate $testRedisValidate)
     {
-
         //
         $filter = new FilterWords();
         $result = $filter->filter('u是个傻瓜dd蛋子haha哈哈中的国订单',1,5);
@@ -25,9 +24,9 @@ class RedisTestController extends Controller
             var_dump($testRedisValidate->getError());
         }
 
-
         $result = $oss->put('images/ceshi.txt','hello word!');
         echo '<pre>';
         print_r($result);die;
+
     }
 }

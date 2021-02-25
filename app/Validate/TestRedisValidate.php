@@ -26,4 +26,5 @@ class TestRedisValidate extends BaseValidate
         'add'=>"title,content",
         'edit'=> ['id','title','content'],
     ];
+
 }
